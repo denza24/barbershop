@@ -15,8 +15,9 @@
     [label]="'Last Name'"
   ></app-text-input>
   <app-text-input
-    [formControl]="$any(registerForm.controls['username'])"
-    [label]="'Username'"
+    [formControl]="$any(registerForm.controls['email'])"
+    [label]="'Email'"
+    [type]="'email'"
   ></app-text-input>
   <app-date-input
     [formControl]="$any(registerForm.controls['dateOfBirth'])"

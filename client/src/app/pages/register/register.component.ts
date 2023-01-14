@@ -8,7 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AfterViewChecked, ChangeDetectorRef } from '@angular/core'
+import { AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-register',
@@ -42,7 +42,7 @@ export class RegisterComponent implements OnInit, AfterViewChecked {
     this.registerForm = this.fb.group({
       firstname: ['', Validators.required],
       lastname: ['', Validators.required],
-      username: ['', Validators.required],
+      email: ['', Validators.required],
       dateOfBirth: [new Date(), Validators.required],
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: [
@@ -62,14 +62,13 @@ export class RegisterComponent implements OnInit, AfterViewChecked {
 
   register() {
     this.accountService.register(this.registerForm.value).subscribe({
-      next: response => {
+      next: (response) => {
         this.router.navigateByUrl('/');
-      }, error: errors => {
+      },
+      error: (errors) => {
         this.validationErrors = errors;
-      }  
-    }
-    
-    );
+      },
+    });
   }
 
   cancel() {

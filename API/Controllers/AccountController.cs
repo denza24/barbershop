@@ -30,10 +30,12 @@ namespace API.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
-            if (await UserExists(registerDto.Username)) return BadRequest("Username is taken");
+            var username = registerDto.FirstName.ToLower() + '.' + registerDto.LastName.ToLower();
+            if (await UserExists(username)) return BadRequest("User exists.");
 
             var user = _mapper.Map<AppUser>(registerDto);
-            user.UserName = registerDto.Username.ToLower();
+            user.UserName = username;
+            user.Email = registerDto.Email;
 
             var result = await _userManager.CreateAsync(user, registerDto.Password);
             if (!result.Succeeded) return BadRequest(result.Errors);
@@ -62,9 +64,9 @@ namespace API.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
-            var user = await _userManager.Users.Include(x => x.Photo).SingleOrDefaultAsync(x => x.UserName.ToLower() == loginDto.Username.ToLower());
+            var user = await _userManager.Users.Include(x => x.Photo).SingleOrDefaultAsync(x => x.Email == loginDto.Email);
 
-            if (user == null) return Unauthorized("Invalid username");
+            if (user == null) return Unauthorized("User not found.");
 
             var result = await _signInManager
                 .CheckPasswordSignInAsync(user, loginDto.Password, false);
